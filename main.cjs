@@ -17,11 +17,11 @@ function shiftHexValue(hexValue, shiftValue) {
     return shiftHexVal.toString(16).padStart(2, '0').toUpperCase();
 }
 
-function darkenHexValues(data) {
+function darkenHexValues(data, shiftValue = 30) {
     const outputData = data.map((hexValue) => {
-        const hexVal1 = shiftHexValue(hexValue.substring(1, 3), 30);
-        const hexVal2 = shiftHexValue(hexValue.substring(3, 5), 30);
-        const hexVal3 = shiftHexValue(hexValue.substring(5, 7), 30);
+        const hexVal1 = shiftHexValue(hexValue.substring(1, 3), shiftValue);
+        const hexVal2 = shiftHexValue(hexValue.substring(3, 5), shiftValue);
+        const hexVal3 = shiftHexValue(hexValue.substring(5, 7), shiftValue);
         return "#" + hexVal1 + hexVal2 + hexVal3;
     });
     return outputData;
@@ -30,7 +30,13 @@ function darkenHexValues(data) {
 function main() {
     const inputData = readJSONFile();
     console.log("The input data is: ", inputData);
-    const outputData = darkenHexValues(inputData);
+    const shiftValueInsertFlag = process.argv[2];
+    let shiftValue = 30;
+    if (shiftValueInsertFlag === "--shiftValue") { 
+        shiftValue = parseInt(process.argv[3]);
+    }
+    console.log("The shift value is: ", shiftValue);
+    const outputData = darkenHexValues(inputData, shiftValue);
     console.log("The output data is: ", outputData);
     writeJSONFile(outputData);
 }
